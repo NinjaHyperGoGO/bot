@@ -5,8 +5,8 @@ const client = new Discord.Client();
 const db = require('quick.db');
 require('moment-duration-format');
 
-let prefix = "!";//botun ön eki 
-let owner = "547313589782970369";// sizin id'niz
+let prefix = "!!";//botun ön eki 
+let owner = "123453123126789";// sizin id'niz
 
 bot.on("ready", guild => {
     bot.user.setActivity('OYNUYOR KISMI', { type: 'WATCHING'  })
@@ -88,7 +88,10 @@ bot.on("message", message => {
     
   if (message.content.toLowerCase() ===  'sa') {
     message.reply('Aleyküm selam!');
-  }
+  }  
+    if (message.content.toLowerCase() ===  'selamun aleykum') {
+    message.reply('Aleyküm selam!');
+  }   
 
     if (message.content.toLowerCase() === prefix + 'yenile') {
     if (message.author.id !== `${owner}`) {
@@ -150,10 +153,10 @@ bot.on("message", message => {
     }
   });
 
-bot.on('guildMemberAdd', member => {
+bot.on ('guildMemberAdd', member => {
   let guild = member.guild;
-  let joinRole = guild.roles.find('name', 'kayıt');// 'Üye' yazılan yeri otomatik rol vereceği rolü yapabilirsiniz.//Otorol Komudu :)
-  member.sendMessage("Sunucu'ya hoş geldin kardeşim")//Sunucuya Yeni Biri Geldiğinde Mesaj Atar istediğini yaz.
+  let joinRole = guild.roles.find('name', '【𝕋𝕖𝕙𝕝𝕚𝕜𝕖】');// 'Üye' yazılan yeri otomatik rol vereceği rolü yapabilirsiniz.//Otorol Komudu :)
+  member.sendMessage("Sunucuya Hoşgeldin ")//Sunucuya Yeni Biri Geldiğinde Mesaj Atar istediğini yaz.
   member.addRole(joinRole);
 
   const channel = member.guild.channels.find('name', 'gelen-giden');// 'gelen-giden' log ismidir. değiştirebilirsiniz. belirttiğiniz isme giriş çıkış gösterecektir.
@@ -167,7 +170,7 @@ bot.on('guildMemberAdd', member => {
   channel.sendEmbed(embed);
 });
 
-bot.on('guildMemberRemove', member => {
+bot.on ('guildMemberRemove', member => {
   const channel = member.guild.channels.find('name', 'gelen-giden');// 'gelen-giden' log ismidir. değiştirebilirsiniz. belirttiğiniz isme giriş çıkış gösterecektir.
   if (!channel) return;
   const embed = new Discord.RichEmbed()
@@ -178,5 +181,6 @@ bot.on('guildMemberRemove', member => {
   .setTimestamp()
   channel.sendEmbed(embed);
 });
-
+    
+   
 bot.login(process.env.TOKEN); 

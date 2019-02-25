@@ -3,16 +3,63 @@ const client = new Discord.Client();
 const ayarlar = require('./ayarlar.json');
 const chalk = require('chalk');
 const fs = require('fs');
-const db = require('quick.db');
 const moment = require('moment');
+const db = require('quick.db')
+const Jimp = require('jimp');
+const snekfetch = require('snekfetch');
 require('./util/eventLoader')(client);
 
-var prefix = ayarlar.prefix;
+let owner = "309617463857905674" //Kendi ıdnizi ekleyin
+
+
+const http = require('http');
+const express = require('express');
+const app = express();
+app.get("/", (request, response) => {
+      console.log(`az önce panelime birisi tıkladı -_-`);
+  response.sendStatus(200);
+});
+app.listen(process.env.PORT);
+setInterval(() => {
+  http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
+}, 280000);
+
+
+
+
+
+
+
+
+
 
 
 const log = message => {
   console.log(`[${moment().format('YYYY-MM-DD HH:mm:ss')}] ${message}`);
 };
+
+
+var prefix = ayarlar.prefix;
+
+
+client.on("message", message => {
+  const dmchannel = client.channels.find("name", "dm");
+  if (message.channel.type === "dm") {
+      if (message.author.id === client.user.id) return;
+      dmchannel.sendMessage("", {embed: {
+              color: 3447003,
+              title: `DM Atan Kişi: **${message.author.tag}**`,
+              description: `Dm Mesajı: **${message.content}**`
+            }})
+  }
+  if (message.channel.bot) return;
+});
+
+
+client.on("ready", () => {
+  client.user.setActivity(prefix + "yardım ") 
+  console.log("Bağlandım!")   
+});
 
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
@@ -28,45 +75,6 @@ fs.readdir('./komutlar/', (err, files) => {
     });
   });
 });
-
-
-client.on("guildMemberAdd", async member => {
-        let sayac = JSON.parse(fs.readFileSync("./autorole.json", "utf8"));
-  let otorole =  JSON.parse(fs.readFileSync("./autorole.json", "utf8"));
-      let arole = otorole[member.guild.id].sayi
-  let giriscikis = JSON.parse(fs.readFileSync("./autorole.json", "utf8"));  
-  let embed = new Discord.RichEmbed()
-    .setTitle('Otorol Sistemi')
-    .setDescription(`:loudspeaker: :inbox_tray:  @${member.user.tag}'a Otorol Verildi `)
-.setColor("GREEN")
-    .setFooter("XiR", client.user.avatarURL);
-
-  if (!giriscikis[member.guild.id].kanal) {
-    return;
-  }
-
-  try {
-    let giriscikiskanalID = giriscikis[member.guild.id].kanal;
-    let giriscikiskanali = client.guilds.get(member.guild.id).channels.get(giriscikiskanalID);
-    giriscikiskanali.send(`:loudspeaker: :white_check_mark: Hoşgeldin **${member.user.tag}** Rolün Başarıyla Verildi.`);
-  } catch (e) { // eğer hata olursa bu hatayı öğrenmek için hatayı konsola gönderelim.
-    return console.log(e)
-  }
-
-});
-//Kullanıcı sunucudan ayrıldığında ayarlanan kanala mesaj gönderelim.
-client.on("guildMemberAdd", async (member) => {
-      let autorole =  JSON.parse(fs.readFileSync("./autorole.json", "utf8"));
-      let role = autorole[member.guild.id].sayi
-
-      member.addRole(role)
-
-
-
-
-});
-
-
 
 client.reload = command => {
   return new Promise((resolve, reject) => {
@@ -119,11 +127,11 @@ client.unload = command => {
   });
 };
 
-client.on('message', msg => {
-  if (msg.content.toLowerCase() === 'sa') {
-    msg.reply('Aleyküm selam,  hoş geldin');
-  }
-});
+
+
+
+
+//dene
 
 client.elevation = message => {
   if(!message.guild) {
@@ -132,13 +140,12 @@ client.elevation = message => {
   if (message.member.hasPermission("BAN_MEMBERS")) permlvl = 2;
   if (message.member.hasPermission("ADMINISTRATOR")) permlvl = 3;
   if (message.author.id === ayarlar.sahip) permlvl = 4;
+  if (message.author.id === ayarlar.zpeed) permlvl = 4;
+
   return permlvl;
 };
 
 var regToken = /[\w\d]{24}\.[\w\d]{6}\.[\w\d-_]{27}/g;
-client.on('debug', e => {
- console.log(chalk.bgBlue.green(e.replace(regToken, 'that was redacted')));
- });
 
 client.on('warn', e => {
   console.log(chalk.bgYellow(e.replace(regToken, 'that was redacted')));
@@ -148,4 +155,8 @@ client.on('error', e => {
   console.log(chalk.bgRed(e.replace(regToken, 'that was redacted')));
 });
 
-client.login(ayarlar.token);
+
+
+
+client.login(process.env.TOKEN);
+//XiR
